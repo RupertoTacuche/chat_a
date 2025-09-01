@@ -1,6 +1,7 @@
 (function() {
     // URL de tu frontend desplegado en Netlify
-    const chatbotUrl = "https://micodigo-frontend.netlify.app/chatbot.html";
+    const chatbotUrl = "https://chatbotpr.netlify.app/chatbot.html";
+    
 
     // Opcional: crea un botón o un icono flotante
     const chatbotIcon = document.createElement('div');
