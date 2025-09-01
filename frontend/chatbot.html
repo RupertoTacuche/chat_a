@@ -229,7 +229,7 @@
 
             try {
                 // La solicitud ahora se envía al endpoint del backend
-                const response = await fetch("http://localhost:3000/chat", {
+                const response = await fetch("https://api-chat-a.onrender.com/chat", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -283,7 +283,7 @@
         async function speakText(text) {
             try {
                 // La solicitud TTS ahora se envía al nuevo endpoint del backend
-                const response = await fetch('http://localhost:3000/tts', {
+                const response = await fetch('https://api-chat-a.onrender.com/tts', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text }),
