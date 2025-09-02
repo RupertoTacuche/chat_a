@@ -13,9 +13,59 @@
             margin: 0;
             padding: 0;
             background-color: #f0f4f8;
-            height: 100vh;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px; /* Posicionado a la derecha con un margen */
+            z-index: 1000;
+        }
+
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            background-color: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .chatbot-window {
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            transform: scale(0);
+            opacity: 0;
+            transform-origin: bottom right; /* Origen de la transformación a la derecha */
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+        }
+        
+        .chatbot-window.open {
+            transform: scale(1);
+            opacity: 1;
         }
 
         .chatbot-header {
@@ -25,6 +75,8 @@
             text-align: center;
             font-size: 18px;
             font-weight: 700;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
         }
 
         .chat-messages {
@@ -115,27 +167,52 @@
     </style>
 </head>
 <body>
-    <div class="chatbot-header">
-        Asistente de Tienda ✨
-    </div>
-    <div class="chat-messages" id="chat-messages">
-        <div class="message bot-message">
-            <span class="bot-message-content">¡Hola! Soy tu asistente de tienda virtual. ¿En qué puedo ayudarte hoy?</span>
-            <button class="tts-button" onclick="speakText('¡Hola! Soy tu asistente de tienda virtual. ¿En qué puedo ayudarte hoy?')">🔊</button>
+
+    <div class="chatbot-container">
+        <!-- Botón para abrir/cerrar el chatbot -->
+        <div class="chatbot-button" id="chatbot-button">
+            <!-- Icono de chatbot (SVG) -->
+            <svg class="chatbot-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 15c0 1.657-1.343 3-3 3H9l-4 4V6c0-1.657 1.343-3 3-3h12c1.657 0 3 1.343 3 3v9z"/>
+            </svg>
         </div>
-    </div>
-    <div class="chat-input">
-        <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
-        <button id="send-button">Enviar</button>
+        
+        <!-- Ventana del chatbot -->
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                Asistente de Tienda ✨
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- Los mensajes se mostrarán aquí -->
+                <div class="message bot-message">
+                    <span class="bot-message-content">¡Hola! Soy tu asistente de tienda virtual. ¿En qué puedo ayudarte hoy?</span>
+                    <button class="tts-button" onclick="speakText('¡Hola! Soy tu asistente de tienda virtual. ¿En qué puedo ayudarte hoy?')">🔊</button>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
+                <button id="send-button">Enviar</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        const chatbotButton = document.getElementById('chatbot-button');
+        const chatbotWindow = document.getElementById('chatbot-window');
         const chatMessages = document.getElementById('chat-messages');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
 
+        // Ya no necesitas la clave de API aquí, ya que el backend la manejará
+        // const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";
+
         // Historial de la conversación para mantener el contexto
         let chatHistory = [{ role: "assistant", content: "¡Hola! Soy tu asistente de tienda virtual. ¿En qué puedo ayudarte hoy?" }];
+
+        // Toggle del chatbot
+        chatbotButton.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('open');
+        });
 
         // Función para enviar mensaje al nuevo backend
         async function sendMessage() {
